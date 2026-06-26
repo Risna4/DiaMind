@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Saved Patient Ledger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f4f8; --card-bg: #ffffff; --text-main: #2d3748;
+            --sidebar-bg: #1a202c; --sidebar-text: #a0aec0;
+            --primary: #3182ce; --danger: #e53e3e; --success: #38a169;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; padding: 30px 20px; display: flex; flex-direction: column; gap: 30px; }
+        .sidebar h2 { font-size: 20px; margin: 0; border-bottom: 1px solid #2d3748; padding-bottom: 15px; }
+        .sidebar-menu { display: flex; flex-direction: column; gap: 8px; padding: 0; margin: 0; }
+        .sidebar-item { padding: 12px 16px; border-radius: 8px; text-decoration: none; color: var(--sidebar-text); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-item:hover { background-color: #2d3748; color: #fff; }
+        .sidebar-item.active { background-color: var(--primary); color: white; }
+
+        .main-content { flex: 1; padding: 40px; display: flex; justify-content: center; align-items: flex-start; }
+        .container { width: 100%; max-width: 900px; background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .header h1 { font-size: 24px; color: #1a365d; margin: 0 0 20px 0; }
+        
+        .table-container { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+        th { background: #f7fafc; padding: 14px; font-weight: 600; color: #4a5568; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 14px; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
+        
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; display: inline-block; }
+        .badge-danger { background: #fed7d7; color: var(--danger); }
+        .badge-success { background: #c6f6d5; color: var(--success); }
+        .btn-edit-action { padding: 6px 12px; font-size: 12px; font-weight: 600; background-color: #edf2f7; color: #4a5568; border-radius: 6px; text-decoration: none; border: 1px solid #cbd5e0; }
+        .btn-edit-action:hover { background-color: #cbd5e0; color: #2d3748; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Diagnostic App</h2>
+    <nav class="sidebar-menu">
+        <a href="/" class="sidebar-item">📊 Run Predictor</a>
+        <a href="/saved-details" class="sidebar-item active">📋 Saved Details</a>
+        <a href="/history" class="sidebar-item">📜 View Log History</a>
+    </nav>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <div class="header"><h1>📋 Saved Patients register</h1></div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Saved On</th>
+                        <th>Patient Name</th>
+                        <th>Age</th>
+                        <th>Glucose</th>
+                        <th>BMI</th>
+                        <th>Diagnostic</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if patients %}
+                        {% for row in patients %}
+                        <tr>
+                            <td style="color: #718096; font-size: 12px;">{{ row[1] }}</td>
+                            <td style="font-weight: 600; color: #1a365d;">{{ row[2] }}</td>
+                            <td>{{ row[3] }} yrs</td>
+                            <td>{{ row[4] }} mg/dL</td>
+                            <td>{{ row[5] }}</td>
+                            <td>
+                                <span class="badge {% if row[6] == 'Diabetic' %}badge-danger{% else %}badge-success{% endif %}">{{ row[6] }}</span>
+                            </td>
+                            <td><a href="/edit-patient/{{ row[0] }}" class="btn-edit-action">✏️ Edit Data</a></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="7" style="text-align: center; color: #718096; padding: 40px;">No saved patient files located in ledger database.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
