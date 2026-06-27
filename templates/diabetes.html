@@ -2,62 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Diabetes Assessment Workspace</title>
+    <title>DiaMind Assessment Workspace</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f0f4f8; --card-bg: #ffffff; --text-main: #2d3748;
-            --sidebar-bg: #1a202c; --sidebar-text: #a0aec0;
-            --primary: #3182ce; --primary-hover: #2b6cb0; --clear-btn: #e2e8f0;
-            --success: #38a169; --danger: #e53e3e; --save-btn: #805ad5;
+            /* Upgraded to a sleek dark canvas palette with vibrant pink highlights */
+            --bg-color: #000000; 
+            --card-bg: rgba(18, 18, 18, 0.65); 
+            --text-main: #f4f4f5;
+            --sidebar-bg: rgba(10, 10, 10, 0.8); 
+            --sidebar-text: #a1a1aa;
+            --primary: #ec4899; /* Pink accent */
+            --primary-hover: #db2777; 
+            --clear-btn: #27272a;
+            --success: #34d399; 
+            --danger: #f87171; 
+            --save-btn: #7c3aed;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; display: flex; min-height: 100vh; }
-        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; padding: 30px 20px; display: flex; flex-direction: column; gap: 30px; }
-        .sidebar h2 { font-size: 20px; margin: 0; border-bottom: 1px solid #2d3748; padding-bottom: 15px; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            display: flex; 
+            /* This generates the soft pink radial glow locked over the bottom right */
+            background-image: radial-gradient(
+                circle at 85% 80%, 
+                rgba(236, 72, 153, 0.25) 0%, 
+                rgba(157, 23, 77, 0.1) 45%, 
+                rgba(0, 0, 0, 0) 75%
+            );
+            background-attachment: fixed; 
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        /* Sidebar Styling */
+        .sidebar { 
+            width: 260px; 
+            background-color: var(--sidebar-bg); 
+            color: white; 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 30px; 
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        .sidebar h2 { font-size: 20px; margin: 0; color: var(--primary); padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-weight: 700; letter-spacing: -0.5px; }
         .sidebar-menu { display: flex; flex-direction: column; gap: 8px; padding: 0; margin: 0; }
-        .sidebar-item { padding: 12px 16px; border-radius: 8px; text-decoration: none; color: var(--sidebar-text); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 10px; }
-        .sidebar-item:hover { background-color: #2d3748; color: #fff; }
-        .sidebar-item.active { background-color: var(--primary); color: white; }
+        .sidebar-item { padding: 12px 16px; border-radius: 8px; text-decoration: none; color: var(--sidebar-text); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease; }
+        .sidebar-item:hover { background-color: rgba(255, 255, 255, 0.05); color: #fff; }
+        .sidebar-item.active { background-color: rgba(236, 72, 153, 0.15); color: var(--primary); border: 1px solid rgba(236, 72, 153, 0.3); }
         
+        /* Main Layout Content */
         .main-content { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 25px; position: relative; }
-        .container { width: 100%; max-width: 650px; background: var(--card-bg); padding: 35px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .header h1 { font-size: 24px; color: #1a365d; margin: 0 0 20px 0; }
+        
+        /* Frosted Glass Container Form Card */
+        .container { 
+            width: 100%; 
+            max-width: 650px; 
+            background: var(--card-bg); 
+            padding: 35px; 
+            border-radius: 16px; 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4); 
+        }
+        .header h1 { font-size: 24px; color: #ffffff; margin: 0 0 20px 0; font-weight: 700; letter-spacing: -0.5px; }
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .full-width { grid-column: span 2; }
         .input-group { display: flex; flex-direction: column; }
-        .input-group label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #4a5568; }
-        input { padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; background-color: #f8fafc; }
-        input:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+        .input-group label { font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .btn-container { display: flex; gap: 10px; }
-        button { flex: 1; padding: 12px; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; }
-        .btn-predict { background-color: var(--primary); color: white; }
+        /* Dark Theme Inputs */
+        input { padding: 12px 14px; border: 1.5px solid #27272a; border-radius: 8px; font-size: 14px; background-color: #09090b; color: #ffffff; transition: all 0.2s ease; }
+        input:focus { outline: none; border-color: var(--primary); background-color: #09090b; box-shadow: 0 0 10px rgba(236, 72, 153, 0.15); }
+        
+        /* Interactive Pill-shaped CTA Buttons */
+        .btn-container { display: flex; gap: 12px; }
+        button { flex: 1; padding: 12px; font-size: 14px; font-weight: 600; border: none; border-radius: 9999px; cursor: pointer; transition: all 0.2s ease; }
+        .btn-predict { background-color: #ffffff; color: #000000; }
+        .btn-predict:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,255,255,0.2); }
         .btn-save { background-color: var(--save-btn); color: white; }
-        .btn-clear { background-color: var(--clear-btn); color: #4a5568; }
+        .btn-save:hover { transform: translateY(-1px); background-color: #6d28d9; }
+        .btn-clear { background-color: var(--clear-btn); color: #e4e4e7; border: 1px solid #3f3f46; }
+        .btn-clear:hover { background-color: #3f3f46; }
 
+        /* Alert System Modifiers */
         .alert { margin-top: 15px; padding: 12px; border-radius: 8px; text-align: center; font-size: 14px; font-weight: 500; }
-        .alert-info { background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
-        .result-box { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: 700; }
-        .result-diabetic { background-color: #fff5f5; color: var(--danger); border: 1px solid #fed7d7; }
-        .result-not-diabetic { background-color: #f0fff4; color: var(--success); border: 1px solid #c6f6d5; }
+        .alert-info { background-color: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); }
+        
+        .result-box { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: 700; letter-spacing: 0.2px; }
+        .result-diabetic { background-color: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .result-not-diabetic { background-color: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
 
-        /* FLOATING CORNER CHATBOT PANEL WIDGET STYLE SHEETS */
-        .chat-floating-trigger { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background-color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; transition: transform 0.2s; }
-        .chat-floating-trigger:hover { transform: scale(1.05); }
+        /* FLOATING CORNER CHATBOT DARK RENDERING */
+        .chat-floating-trigger { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background-color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 8px 24px rgba(236, 72, 153, 0.3); z-index: 1000; transition: transform 0.2s, background-color 0.2s; }
+        .chat-floating-trigger:hover { transform: scale(1.05); background-color: var(--primary-hover); }
         
-        .chat-box-widget { position: fixed; bottom: 95px; right: 25px; width: 360px; height: 460px; background: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: 1px solid #e2e8f0; }
-        .chat-widget-header { background: #2d3748; color: white; padding: 15px; font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-widget-close { cursor: pointer; font-size: 18px; opacity: 0.8; }
-        .chat-widget-window { flex: 1; padding: 15px; overflow-y: auto; background-color: #f8fafc; display: flex; flex-direction: column; gap: 12px; }
+        .chat-box-widget { position: fixed; bottom: 95px; right: 25px; width: 360px; height: 460px; background: #09090b; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .chat-widget-header { background: #18181b; color: white; padding: 15px; font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .chat-widget-close { cursor: pointer; font-size: 18px; opacity: 0.8; color: var(--sidebar-text); }
+        .chat-widget-close:hover { color: #fff; }
+        .chat-widget-window { flex: 1; padding: 15px; overflow-y: auto; background-color: #040405; display: flex; flex-direction: column; gap: 12px; }
         
-        .cmsg { max-width: 80%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.4; }
+        .cmsg { max-width: 80%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.5; }
         .cmsg-user { background-color: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .cmsg-bot { background-color: #edf2f7; color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .cmsg-bot { background-color: #18181b; color: #e4e4e7; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid rgba(255,255,255,0.03); }
+        .cmsg-bot strong { color: var(--primary); } /* Highlights the headers in chatbot text */
         
-        .chat-widget-input { padding: 12px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; }
-        .chat-widget-input input { flex: 1; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 6px; font-size: 13px; outline: none; }
-        .chat-widget-input button { flex: none; padding: 8px 14px; background-color: var(--primary); color: white; border-radius: 6px; font-size: 13px; font-weight: 600; border:none; cursor:pointer;}
+        .chat-widget-input { padding: 12px; background: #09090b; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; gap: 8px; }
+        .chat-widget-input input { flex: 1; padding: 8px 12px; border: 1.5px solid #27272a; border-radius: 8px; font-size: 13px; outline: none; margin:0; }
+        .chat-widget-input button { flex: none; width: auto; padding: 0 16px; background-color: var(--primary); color: white; border-radius: 8px; font-size: 13px; font-weight: 600; border:none; cursor:pointer;}
+        .chat-widget-input button:hover { background-color: var(--primary-hover); }
     </style>
 </head>
 <body>
