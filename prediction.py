@@ -21,14 +21,20 @@ DB_FILE = "predictions_history.db"
 def init_db():
     with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
-        # 1. Background log history table (keeps tracks of individual analytical runs)
+        
+        # 1. Background log history table (FIXED: Added 'name' column)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                glucose INTEGER, bmi REAL, age INTEGER, result TEXT
+                name TEXT,
+                glucose INTEGER, 
+                bmi REAL, 
+                age INTEGER, 
+                result TEXT
             )
         """)
+        
         # 2. Saved patients ledger (name tracking marked UNIQUE to allow UPSERT updates)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS saved_patients (
@@ -63,19 +69,24 @@ def predict(
             context={"saved_msg": "Model error: Unable to compute prediction."}
         )
 
+    clean_name = name.strip()
     features = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree_function, age]])
     prediction = model.predict(features)
     result = "Diabetic" if prediction[0] == 1 else "Not Diabetic"
 
+    # FIXED: Added 'name' to the INSERT SQL query logic
     with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO history (glucose, bmi, age, result) VALUES (?, ?, ?, ?)", (glucose, bmi, age, result))
+        cursor.execute(
+            "INSERT INTO history (name, glucose, bmi, age, result) VALUES (?, ?, ?, ?, ?)", 
+            (clean_name, glucose, bmi, age, result)
+        )
         conn.commit()
 
     return templates.TemplateResponse(
         request=request, name="diabetes.html",
         context={
-            "result": result, "name": name, "pregnancies": pregnancies, "glucose": glucose,
+            "result": result, "name": clean_name, "pregnancies": pregnancies, "glucose": glucose,
             "blood_pressure": blood_pressure, "skin_thickness": skin_thickness, "insulin": insulin,
             "bmi": bmi, "diabetes_pedigree_function": diabetes_pedigree_function, "age": age,
             "show_recommendations": True
@@ -127,9 +138,10 @@ def save_patient(
 
 @app.get("/history", response_class=HTMLResponse)
 def view_history(request: Request):
+    # FIXED: Added 'name' to the SELECT query logic to ensure data maps to the UI columns
     with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT timestamp, glucose, bmi, age, result FROM history ORDER BY id DESC")
+        cursor.execute("SELECT timestamp, name, age, glucose, bmi, result FROM history ORDER BY id DESC")
         history = cursor.fetchall()
     return templates.TemplateResponse(request=request, name="history.html", context={"history": history})
 
@@ -150,7 +162,6 @@ def edit_patient(request: Request, patient_id: int):
         patient = cursor.fetchone()
         
     if not patient:
-        # Use status code 303 See Other for safe browser redirection
         return RedirectResponse(url="/saved-details", status_code=303)
 
     return templates.TemplateResponse(
@@ -199,7 +210,6 @@ def chat_response(data: ChatMessage):
         )
     return JSONResponse(content={"reply": reply})
 
-# Optional local entry point execution check
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

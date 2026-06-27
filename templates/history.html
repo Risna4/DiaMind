@@ -30,7 +30,6 @@
             color: var(--text-main); 
             display: flex; 
             
-            /* 🔥 EXCISE BRIGHT ROSE AURA ENGINE WITH ZERO RENDERING MASKING ERROR */
             background-image: radial-gradient(
                 circle at 85% 85%, 
                 rgba(236, 72, 153, 0.45) 0%,   
@@ -43,7 +42,7 @@
             background-repeat: no-repeat;
         }
 
-        /* Sidebar Design matching diabetes.html */
+        /* Sidebar Design */
         .sidebar { 
             width: 260px; 
             background-color: var(--sidebar-bg); 
@@ -61,7 +60,7 @@
         .sidebar-item:hover { background-color: rgba(255, 255, 255, 0.05); color: #fff; }
         .sidebar-item.active { background-color: rgba(236, 72, 153, 0.15); color: var(--primary); border: 1px solid rgba(236, 72, 153, 0.3); }
 
-        /* Main Area Setup */
+        /* Main Setup */
         .main-content { flex: 1; padding: 40px; display: flex; justify-content: center; align-items: flex-start; box-sizing: border-box; }
         
         .container { 
@@ -76,14 +75,13 @@
         }
         .header h1 { font-size: 24px; color: #ffffff; margin: 0 0 20px 0; font-weight: 700; letter-spacing: -0.5px; }
         
-        /* Dark Theme Data Tables */
+        /* Table Layouts */
         .table-container { border: 1px solid #27272a; border-radius: 8px; overflow: hidden; background: #09090b; }
         table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
         th { background: #18181b; padding: 14px; font-weight: 600; color: #a1a1aa; border-bottom: 2px solid #27272a; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         td { padding: 14px; border-bottom: 1px solid #18181b; color: #e4e4e7; vertical-align: middle; }
         tr:hover { background-color: rgba(255, 255, 255, 0.02); }
         
-        /* Badges Modifiers for Diagnostic Risk Result Outputs */
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; display: inline-block; }
         .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
         .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
@@ -107,7 +105,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Analyzed On</th>
+                        <th>With Log Time</th>
                         <th>Patient Name</th>
                         <th>Age</th>
                         <th>Glucose</th>
@@ -116,16 +114,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if patients %}
-                        {% for row in patients %}
+                    {% if history %}
+                        {% for row in history %}
                         <tr>
-                            <td style="color: #a1a1aa; font-size: 12px;">{{ row[1] }}</td>
-                            <td style="font-weight: 600; color: #ffffff;">{{ row[2] }}</td>
-                            <td>{{ row[3] }} yrs</td>
-                            <td>{{ row[4] }} mg/dL</td>
-                            <td>{{ row[5] }}</td>
+                            <td style="color: #a1a1aa; font-size: 12px;">{{ row[0] }}</td>
+                            <td style="font-weight: 600; color: #ffffff;">{{ row[1] }}</td>
+                            <td>{{ row[2] }} yrs</td>
+                            <td>{{ row[3] }} mg/dL</td>
+                            <td>{{ row[4] }}</td>
                             <td>
-                                <span class="badge {% if row[6] == 'Diabetic' %}badge-danger{% else %}badge-success{% endif %}">{{ row[6] }}</span>
+                                <span class="badge {% if row[5] == 'Diabetic' %}badge-danger{% else %}badge-success{% endif %}">{{ row[5] }}</span>
                             </td>
                         </tr>
                         {% endfor %}
